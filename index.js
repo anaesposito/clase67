@@ -52,12 +52,18 @@ const selecColor = document.querySelector("#color");
 
 form.onsubmit = (e) => {
   e.preventDefault();
+  //// nombre del zapato en minuscula
+  let nombreProducto = (producto) => {
+    return producto.nombre.toLowerCase();
+  };
+  //// funcion q valida si en el input hay value
+  let productoBuscado = (producto) => {
+    return nombreProducto(producto).includes(filtro.value);
+  };
 
+  ///filtro por busqueda
   filtradoPorBusqueda = productos.filter((producto) => {
-    let nombreProducto = producto.nombre.toLowerCase();
-    // console.log(producto.nombre);
-    // console.log(nombreProducto.includes(filtro.value));
-    if (nombreProducto.includes(filtro.value)) {
+    if (productoBuscado(producto)) {
       return producto;
     }
   });
@@ -76,15 +82,12 @@ form.onsubmit = (e) => {
     }
   };
 
-  let filtradoColorTipo = [];
   if (selecTipo.value && selecColor.value && filtro.value) {
     filtradoTotal = productos.filter((producto) => {
-      let nombreProducto = producto.nombre.toLowerCase();
       return (
-        // console.log(
         selecTipo.value === producto.tipo &&
         selecColor.value === producto.color &&
-        nombreProducto.includes(filtro.value)
+        productoBuscado(producto)
       );
     });
     noHayStock();
@@ -99,19 +102,12 @@ form.onsubmit = (e) => {
     mostrarProducto(filtradoColorTipo);
   } else if (filtro.value && selecColor.value) {
     filtroBusquedaColor = productos.filter((producto) => {
-      let nombreProducto = producto.nombre.toLowerCase();
-      return (
-        selecTipo.value === producto.tipo &&
-        nombreProducto.includes(filtro.value)
-      );
+      nombreProducto(producto);
+      return selecTipo.value === producto.tipo && productoBuscado(producto);
     });
   } else if (filtro.value && selecTipo.value) {
-    let nombreProducto = producto.nombre.toLowerCase();
     filtroBusquedaTipo = productos.filter((producto) => {
-      return (
-        selecColor.value === producto.color &&
-        nombreProducto.includes(filtro.value)
-      );
+      return selecColor.value === producto.color && productoBuscado(producto);
     });
   } else if (filtro.value) {
     mostrarProducto(filtradoPorBusqueda);
